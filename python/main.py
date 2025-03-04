@@ -126,6 +126,16 @@ def insert_item(item: Item, db: sqlite3.Connection):
     # STEP 4-1: add an implementation to store an item
     try:
         cursor = db.cursor()
+        cursor.execute("SELECT id FROM categories WHERE name = ?", (item.category,))
+        category_row = cursor.fetchone()
+        
+        if category_row is None:
+            cursor.execute("INSERT INTO categories (name) VALUES (?)", (item.category,))
+            db.commit()  
+            category_id = cursor.lastrowid
+        else:
+            category_id = category_row["id"]
+
         cursor.execute("SELECT id FROM items WHERE name = ?", (item.name,))
         existing_item = cursor.fetchone()
 
@@ -134,8 +144,8 @@ def insert_item(item: Item, db: sqlite3.Connection):
             raise HTTPException(status_code=400, detail="Item already exists")
 
         cursor.execute(
-            "INSERT INTO items (name, category, image_name) VALUES (?, ?, ?)",
-            (item.name, item.category, item.image_name),
+            "INSERT INTO items (name, category_id, image_name) VALUES (?, ?, ?)",
+            (item.name, category_id, item.image_name),
         )
         db.commit()
         logger.info(f"New item inserted: {item.dict()}")
@@ -151,7 +161,11 @@ def insert_item(item: Item, db: sqlite3.Connection):
 def get_items(db: sqlite3.Connection = Depends(get_db)):
     try:
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM items")
+        cursor.execute("""
+            SELECT items.id, items.name, categories.name AS category_name, items.image_name
+            FROM items
+            JOIN categories ON items.category_id = categories.id
+        """)
         items = cursor.fetchall()
 
         return {
@@ -169,7 +183,12 @@ def get_items(db: sqlite3.Connection = Depends(get_db)):
 def get_item(item_id: int, db: sqlite3.Connection = Depends(get_db)):
     try:
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM items WHERE id = ?", (item_id,))
+        cursor.execute("""
+            SELECT items.id, items.name, categories.name AS category_name, items.image_name
+            FROM items
+            JOIN categories ON items.category_id = categories.id
+            WHERE items.id = ?
+        """, (item_id,))
         item = cursor.fetchone()
 
         if item is None:
@@ -185,7 +204,12 @@ def get_item(item_id: int, db: sqlite3.Connection = Depends(get_db)):
 def search_items(keyword: str = Query(..., min_length=1), db: sqlite3.Connection = Depends(get_db)):
     try:
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM items WHERE name LIKE ?", (f"%{keyword}%",))
+        cursor.execute("""
+            SELECT items.name, categories.name AS category, items.image_name
+            FROM items
+            JOIN categories ON items.category_id = categories.id
+            WHERE items.name LIKE ? OR categories.name LIKE ?
+        """, (f"%{keyword}%", f"%{keyword}%"))
         items = cursor.fetchall()
 
         return {
