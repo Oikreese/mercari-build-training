@@ -73,8 +73,8 @@ class AddItemResponse(BaseModel):
 async def add_item(
     name: str = Form(...),
     category: str = Form(...),
-    db: sqlite3.Connection = Depends(get_db),
-    image: UploadFile = File(...)
+    image: UploadFile = File(...),
+    db: sqlite3.Connection = Depends(get_db)
 ):
     if not name or not category or not image:
         raise HTTPException(status_code=400, detail="name, category, and image are required")
@@ -135,6 +135,7 @@ def insert_item(item: Item):
 
             if existing_item:
                 logger.info(f"Item already exists, updating image_name: {existing_item}")
+                existing_item["image_name"] = item["image_name"]
             else:
                 new_item = item.dict()
                 data["items"].append(new_item)
@@ -154,7 +155,7 @@ def insert_item(item: Item):
 def get_items():
     try:
         if not JSON_DB.exists():
-            return {"items": []}
+            raise HTTPException(status_code=404, detail="Item not found")
 
         with open(JSON_DB, "r", encoding="utf-8") as f:
             content = f.read().strip()
@@ -175,7 +176,7 @@ def get_item(item_id: int):
 
         with open(JSON_DB, "r", encoding="utf-8") as f:
             content = f.read().strip()
-            data = json.loads(content) if content else {"items": []}
+            data = json.loads(content) if content else DEFAULT_JSON_DATA
 
         items = data.get("items", [])
 
