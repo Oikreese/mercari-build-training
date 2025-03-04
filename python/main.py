@@ -158,7 +158,7 @@ def get_items():
 
         with open(JSON_DB, "r", encoding="utf-8") as f:
             content = f.read().strip()
-            data = json.loads(content) if content else {"items": []}
+            data = json.loads(content) if content else DEFAULT_JSON_DATA
 
         return {"items": data.get("items", [])}
 
