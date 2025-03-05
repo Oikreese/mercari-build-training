@@ -170,7 +170,7 @@ def get_items(db: sqlite3.Connection = Depends(get_db)):
 
         return {
             "items": [
-                {"id": row["id"], "name": row["name"], "category": row["category"], "image_name": row["image_name"]}
+                {"id": row["id"], "name": row["name"], "category": row["category_name"], "image_name": row["image_name"]}
                 for row in items
             ]
         }
