@@ -194,7 +194,7 @@ def get_item(item_id: int, db: sqlite3.Connection = Depends(get_db)):
         if item is None:
             raise HTTPException(status_code=404, detail="Item not found")
 
-        return {"id": item["id"], "name": item["name"], "category": item["category"], "image_name": item["image_name"]}
+        return {"id": item["id"], "name": item["name"], "category": item["category_name"], "image_name": item["image_name"]}
     except Exception as e:
         logger.error(f"Failed to get item {item_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to get item")
