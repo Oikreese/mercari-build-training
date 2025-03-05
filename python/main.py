@@ -168,12 +168,7 @@ def get_items(db: sqlite3.Connection = Depends(get_db)):
         """)
         items = cursor.fetchall()
 
-        return {
-            "items": [
-                {"id": row["id"], "name": row["name"], "category": row["category_name"], "image_name": row["image_name"]}
-                for row in items
-            ]
-        }
+        return {"items": [dict(row) for row in items]}
     except Exception as e:
         logger.error(f"Failed to get items: {e}")
         raise HTTPException(status_code=500, detail="Failed to get items")
@@ -194,7 +189,7 @@ def get_item(item_id: int, db: sqlite3.Connection = Depends(get_db)):
         if item is None:
             raise HTTPException(status_code=404, detail="Item not found")
 
-        return {"id": item["id"], "name": item["name"], "category": item["category_name"], "image_name": item["image_name"]}
+        return dict(item)
     except Exception as e:
         logger.error(f"Failed to get item {item_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to get item")
@@ -205,7 +200,7 @@ def search_items(keyword: str = Query(..., min_length=1), db: sqlite3.Connection
     try:
         cursor = db.cursor()
         cursor.execute("""
-            SELECT items.name, categories.name AS category, items.image_name
+            SELECT items.name, categories.name AS category_name, items.image_name
             FROM items
             JOIN categories ON items.category_id = categories.id
             WHERE items.name LIKE ? OR categories.name LIKE ?
@@ -214,7 +209,7 @@ def search_items(keyword: str = Query(..., min_length=1), db: sqlite3.Connection
 
         return {
             "items": [
-                {"name": row["name"], "category": row["category"], "image_name": row["image_name"]}
+                {"name": row["name"], "category": row["category_name"], "image_name": row["image_name"]}
                 for row in items
             ]
         }
