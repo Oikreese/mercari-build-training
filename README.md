@@ -31,14 +31,14 @@ The following icons indicate pointers for
   /[EN](document/04-api.en.md))
 - [x] **STEP5** Database ([JA](document/05-database.ja.md)/[EN](document/05-database.en.md))
 - [x] **STEP6** Writing Tests ([JA](document/06-testing.ja.md)/[EN](document/06-testing.en.md))
-- [ ] **STEP7** Docker ([JA](document/07-docker.ja.md)/[EN](document/07-docker.en.md))
-- [ ] **STEP8** Continuous Integration(CI) ([JA](document/08-ci.ja.md)
+- [x] **STEP7** Docker ([JA](document/07-docker.ja.md)/[EN](document/07-docker.en.md))
+- [x] **STEP8** Continuous Integration(CI) ([JA](document/08-ci.ja.md)
   /[EN](document/08-ci.en.md))
 - [ ] **STEP9** (Stretch) Frontend ([JA](document/09-frontend.ja.md)
   /[EN](document/09-frontend.en.md))
 - [ ] **STEP10** (Stretch)  Run multi service ([JA](document/10-docker-compose.ja.md)
   /[EN](document/10-docker-compose.en.md))
-- [ ] **EXTRA1** (Stretch)  Data Analysis ([Link](document/extra-01-data-analysis.md))
+- [x] **EXTRA1** (Stretch)  Data Analysis ([Link](document/extra-01-data-analysis.md))
 
 ### Other documents
 
