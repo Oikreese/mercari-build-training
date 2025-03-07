@@ -148,7 +148,7 @@ def insert_item(item: Item, db: sqlite3.Connection):
             (item.name, category_id, item.image_name),
         )
         db.commit()
-        logger.info(f"New item inserted: {item.dict()}")
+        logger.info(f"New item inserted: {item.model_dump()}")
 
     except Exception as e:
         db.rollback()
