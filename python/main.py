@@ -120,6 +120,7 @@ class Item(BaseModel):
     name: str
     category: str
     image_name: str
+    category_name: Optional[str] = Field(None, description="Category name from categories table")
 
 
 def insert_item(item: Item, db: sqlite3.Connection):

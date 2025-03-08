@@ -29,20 +29,25 @@ export const ItemList = ({ reload, onLoadCompleted }: Prop) => {
   }, [reload, onLoadCompleted]);
 
   return (
-    <div>
-      {items?.map((item) => {
-        return (
-          <div key={item.id} className="ItemList">
-            {/* TODO: Task 2: Show item images */}
-            <img src={PLACEHOLDER_IMAGE} />
-            <p>
-              <span>Name: {item.name}</span>
-              <br />
-              <span>Category: {item.category}</span>
-            </p>
-          </div>
-        );
-      })}
+    <div className="ItemListContainer">
+      {items?.map((item) => (
+        <div key={item.id} className="ItemList">
+          <img
+            src={`http://localhost:9000/image/${item.image_name}`}
+            alt="Item Image"
+            onError={(e) => {
+              e.currentTarget.src = PLACEHOLDER_IMAGE;
+              e.currentTarget.alt = 'Image not found';
+              e.currentTarget.title = 'Failed to load image';
+            }}
+          />
+          <p>
+            <span className="ItemName">Name: {item.name}</span>
+            <br />
+            <span className="ItemCategory">Category: {item.category_name}</span>
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

@@ -5,6 +5,7 @@ export interface Item {
   name: string;
   category: string;
   image_name: string;
+  category_name?: string;
 }
 
 export interface ItemListResponse {

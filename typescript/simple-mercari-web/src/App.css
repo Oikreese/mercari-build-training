@@ -1,38 +1,86 @@
 .App {
   text-align: center;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .Title {
-  background-color: #222427;
+  background-color: #d7384a;
   min-height: 8vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: left;
-  font-size: calc(10px + 1vmin);
+  font-size: calc(12px + 1vmin);
+  font-weight: bold; 
   color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .Listing {
-  background-color: #222427;
+  background-color: #fbb845;
   min-height: 8vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: left;
   font-size: calc(10px + 1vmin);
-  color: white;
+  color: rgb(172, 98, 23);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ItemListContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 20px; 
+  padding: 20px;
+  justify-content: center;
 }
 
 .ItemList {
-  background-color: #222427;
+  background-color: #38ccf5;
   min-height: 8vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: left;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   font-size: calc(10px + 1vmin);
-  color: white;
+  font-weight: bold; 
+  color: rgb(13, 79, 111);
+}
+
+.ItemList img {
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ItemList p {
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.ItemName {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.ItemCategory {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 768px) {
+  .ItemListContainer {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
 }
 
 .App-link {
