@@ -8,7 +8,6 @@ import sqlite3
 from pydantic import BaseModel, Field
 from typing import Optional
 from contextlib import asynccontextmanager
-import json
 import hashlib
 
 
@@ -17,6 +16,8 @@ images = pathlib.Path(__file__).parent.resolve() / "images"
 db = pathlib.Path(__file__).parent.resolve() / "db" / "mercari.sqlite3"
 SQL_DB = pathlib.Path(__file__).parent.resolve() / "db" / "items.sql"
 
+# Maximum file size (in bytes)
+MAX_FILE_SIZE = 1024 * 1024  # 1MB (easier to find a picture to test)
 
 def get_db():
     if not db.exists():
@@ -85,17 +86,33 @@ async def add_item(
     if not name or not category or not image:
         raise HTTPException(status_code=400, detail="name, category, and image are required")
 
+    # Check file extension (when POST)
+    if not image.filename.lower().endswith((".jpg", ".jpeg")):
+        raise HTTPException(status_code=400, detail="Uploaded file must have a .jpg or .jpeg extension")
+
+    # Check file size
     image_bytes = await image.read()
+    if len(image_bytes) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File size exceeds the limit")
+
+    # Validate MIME type
+    image_type = image.content_type
+    if image_type != "image/jpeg":
+        raise HTTPException(status_code=400, detail="Uploaded file is not a valid JPG image")
+    
+    # Generate unique filename
     image_hash = hashlib.sha256(image_bytes).hexdigest()
     image_filename = f"{image_hash}.jpg"
-    image_path = pathlib.Path(__file__).parent.resolve() / "images" / image_filename
-
+    image_path = images / image_filename
+    
+    # Save file
     with open(image_path, "wb") as f:
         f.write(image_bytes)
-
+    
+    # Store item in database
     item = Item(name=name, category=category, image_name=image_filename)
     insert_item(item, db)
-
+    
     return {"message": f"item received: {name}"}
 
 
@@ -105,6 +122,7 @@ async def get_image(image_name):
     # Create image path
     image = images / image_name
 
+    # Check file extension (when GET)
     if not image_name.endswith(".jpg"):
         raise HTTPException(status_code=400, detail="Image path does not end with .jpg")
 
