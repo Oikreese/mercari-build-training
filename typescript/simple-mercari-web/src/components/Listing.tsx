@@ -70,7 +70,16 @@ export const Listing = ({ onListingCompleted }: Prop) => {
   };
   return (
     <div className="Listing">
-      <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+      <form
+        onSubmit={onSubmit}
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '10px',
+          padding: '20px',
+        }}
+      >
         <input
           type="text"
           name="name"
@@ -79,7 +88,11 @@ export const Listing = ({ onListingCompleted }: Prop) => {
           onChange={onValueChange}
           required
           value={values.name}
-          style={{ padding: '8px', borderRadius: '5px', border: '1px solid #a96e27' }}
+          style={{
+            padding: '8px',
+            borderRadius: '10px',
+            textAlign: 'center',
+          }}
         />
         <input
           type="text"
@@ -88,7 +101,11 @@ export const Listing = ({ onListingCompleted }: Prop) => {
           placeholder="category"
           onChange={onValueChange}
           value={values.category}
-          style={{ padding: '8px', borderRadius: '5px', border: '1px solid #a96e27' }}
+          style={{
+            padding: '8px',
+            borderRadius: '10px',
+            textAlign: 'center',
+          }}
         />
         <input
           type="file"
@@ -97,19 +114,20 @@ export const Listing = ({ onListingCompleted }: Prop) => {
           onChange={onFileChange}
           required
           ref={uploadImageRef}
-          style={{ padding: '8px', borderRadius: '5px', border: '1px solid #a96e27', backgroundColor: 'white' }}
+          style={{
+            padding: '4px',
+            borderRadius: '10px',
+          }}
         />
         <button
-          type="submit"
+          className="button"
           style={{
-            padding: '10px 15px',
-            backgroundColor: '#d7384a',
+            margin: '0 10px',
+            padding: '10px',
             color: 'white',
-            border: 'none',
-            borderRadius: '5px',
             cursor: 'pointer',
             fontWeight: 'bold',
-            boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.2)',
+            boxShadow: '4px 4px 10px rgba(177, 106, 7, 0.2)',
           }}
         >
           List this item
