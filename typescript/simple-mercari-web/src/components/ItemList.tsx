@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Item, fetchItems, searchItems } from '~/api';
 
 const PLACEHOLDER_IMAGE = import.meta.env.VITE_FRONTEND_URL + '/logo192.png';
@@ -35,7 +35,11 @@ export const ItemList = ({ reload, onLoadCompleted, keyword }: Prop) => {
       searchItems({keyword})
         .then((data) => {
           console.debug('GET success:', data);
-          setSearchItemResult(data.items);
+          const adaptedData = data.items.map((item) => ({
+            ...item,
+            category_name: item.category,
+          }));
+          setSearchItemResult(adaptedData);
         })
         .catch((error) => {
           console.error('GET error:', error);

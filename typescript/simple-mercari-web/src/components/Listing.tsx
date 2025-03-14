@@ -107,6 +107,22 @@ export const Listing = ({ onListingCompleted }: Prop) => {
             textAlign: 'center',
           }}
         />
+        <label
+          htmlFor="image"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '7px 15px',
+            backgroundColor: 'rgb(223, 53, 1)',
+            color: 'white',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+          }}
+        >
+          Upload File
+        </label>
         <input
           type="file"
           name="image"
@@ -114,10 +130,7 @@ export const Listing = ({ onListingCompleted }: Prop) => {
           onChange={onFileChange}
           required
           ref={uploadImageRef}
-          style={{
-            padding: '4px',
-            borderRadius: '10px',
-          }}
+          style={{ display: 'none' }}
         />
         <button
           className="button"
