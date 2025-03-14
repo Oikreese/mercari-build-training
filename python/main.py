@@ -292,11 +292,11 @@ async def update_item(
         update_fields = []
         update_values = []
 
-        if name:
+        if name and name != existing_item["name"]:
             update_fields.append("name = ?")
             update_values.append(name)
 
-        if category:
+        if category and category != existing_item["category_name"]:
             cursor.execute("SELECT id FROM categories WHERE name = ?", (category,))
             category_row = cursor.fetchone()
 
@@ -322,14 +322,19 @@ async def update_item(
             image_filename = f"{image_hash}.jpg"
             image_path = images / image_filename
 
-            with open(image_path, "wb") as f:
-                f.write(image_bytes)
+            if image_filename != existing_item["image_name"]:
+                with open(image_path, "wb") as f:
+                    f.write(image_bytes)
 
-            update_fields.append("image_name = ?")
-            update_values.append(image_filename)
+                old_image_path = images / existing_item["image_name"]
+                if old_image_path.exists():
+                    old_image_path.unlink()
+
+                update_fields.append("image_name = ?")
+                update_values.append(image_filename)
 
         if not update_fields:
-            raise HTTPException(status_code=400, detail="No valid fields to update")
+            return {"message": "No changes detected, item not updated"}
 
         update_values.append(item_id)
         update_query = f"UPDATE items SET {', '.join(update_fields)} WHERE id = ?"
