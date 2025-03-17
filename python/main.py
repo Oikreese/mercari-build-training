@@ -326,12 +326,33 @@ async def update_item(
                 with open(image_path, "wb") as f:
                     f.write(image_bytes)
 
-                old_image_path = images / existing_item["image_name"]
-                if old_image_path.exists():
-                    old_image_path.unlink()
+                if not image_path.exists():
+                    logger.error(f"Failed to save image: {image_path}")
+                    raise HTTPException(status_code=500, detail="Failed to save image")
+                else:
+                    logger.info(f"New image saved: {image_path}")
+
+                    old_image_path = images / existing_item["image_name"]
+                    if old_image_path.exists():
+                        old_image_path.unlink()
 
                 update_fields.append("image_name = ?")
                 update_values.append(image_filename)
+                
+            elif image_filename == existing_item["image_name"] and not image_path.exists():
+                with open(image_path, "wb") as f:
+                    f.write(image_bytes)
+
+                if not image_path.exists():
+                    logger.error(f"Failed to save image: {image_path}")
+                    raise HTTPException(status_code=500, detail="Failed to save image")
+                else:
+                    logger.info(f"New image saved: {image_path}")
+                    update_fields.append("image_name = ?")
+                    update_values.append(image_filename)
+        
+            else:
+                logger.info(f"Image already exists: {image_path}")
 
         if not update_fields:
             return {"message": "No changes detected, item not updated"}
