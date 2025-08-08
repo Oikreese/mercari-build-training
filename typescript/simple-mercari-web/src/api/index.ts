@@ -28,6 +28,23 @@ export const fetchItems = async (): Promise<ItemListResponse> => {
   return response.json();
 };
 
+export const searchItems = async (queryParams: Record<'keyword', string>): Promise<ItemListResponse> => {
+  const searchQueryParams = new URLSearchParams(queryParams);
+  const response = await fetch(`${SERVER_URL}/search?${searchQueryParams}`, {
+    method: 'GET',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  });
+
+  if (response.status >= 400) {
+   throw new Error('Failed to fetch items from the server');
+  }
+  return response.json();
+}
+
 export interface CreateItemInput {
   name: string;
   category: string;
